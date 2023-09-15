@@ -34,6 +34,10 @@ int main() {
     // 50th percentile = 8
     // 75th percentile = 9
     // 100th percentile = 10
+
+    cout << "reading column " << column_name << " from " << filename << endl;
+    cout << "Summary (value: frequency)" << endl;
+    
     vector<pair<double, int>> answer = summarize(v);
     for (size_t i = 0; i < answer.size(); i++) {
         cout << answer[i].first << ": " << answer[i].second << endl;
@@ -47,7 +51,11 @@ int main() {
     cout << "mode = " << mode(v) << endl;
     cout << "min = " << min(v) << endl;
     cout << "max = " << max(v) << endl;
-    
+    cout << "  0th percentile = " << percentile(v, 0.0) << endl;
+    cout << " 25th percentile = " << percentile(v, 0.25) << endl;
+    cout << " 50th percentile = " << percentile(v, 0.5) << endl;
+    cout << " 75th percentile = " << percentile(v, 0.75) << endl;
+    cout << "100th percentile = " << percentile(v, 1.0) << endl;
 
     return 0;
 }

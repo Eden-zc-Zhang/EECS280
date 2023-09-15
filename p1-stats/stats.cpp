@@ -8,26 +8,31 @@
 using namespace std;
 
 std::vector<std::pair<double, int>> summarize(std::vector<double> v) {
+    std::vector<std::pair<double, int>> result;
     sort(v);
-    std::vector<std::pair<double, int>> summary;
 
-    int count = 1;
-    size_t size = v.size();
-    for (size_t i = 0; i < size; i++) {
-        if (v.at(i) == v.at(i - 1)) {
-            count++;
+    double current_value = v[0];
+    int current_frequency = 1;
+
+    for (size_t i = 1; i < v.size(); i++) {
+        if (std::abs(v[i] - current_value) < 0.0000001) {
+            current_frequency++;
         } else {
-            summary.emplace_back(v.at(i - 1), count);
-            count = 1;
+            result.push_back({current_value, current_frequency});
+            current_value = v.at(i);
+            current_frequency = 1;
         }
     }
-    summary.emplace_back(v.back(), count);
 
-    return summary;
+    // Push the last element
+    result.push_back({current_value, current_frequency});
+
+
+    return result;
 }
 
 int count(std::vector<double> v) {
-    return v.size();
+    return static_cast<int>(v.size());
 }
 
 double sum(std::vector<double> v) {
@@ -58,7 +63,7 @@ double mode(std::vector<double> v) {
     int maxCount = 1;
     int currentCount = 1;
 
-    for (size_t i = 0; i < v.size(); i++) {
+    for (size_t i = 1; i < v.size(); i++) {
         if (v[i] == v[i - 1]) {
             currentCount++;
         } else {
@@ -78,23 +83,13 @@ double mode(std::vector<double> v) {
 }
 
 double min(std::vector<double> v) {
-    double min = v[0];
-    for (size_t i = 1; i < v.size(); i++) {
-        if (min - v[i] > 0.000001) {
-            min = v[i];
-        }
-    }
-    return min;
+    sort(v);
+    return v[0];
 }
 
 double max(std::vector<double> v) {
-    double max = v[0];
-    for (size_t i = 0; i < v.size(); i++) {
-        if (v.at(i) - max > 0.000001) {
-            max = v[i];
-        }
-    }
-    return max;
+    sort(v);
+    return v[v.size() - 1];
 }
 
 double stdev(std::vector<double> v) {
@@ -110,10 +105,13 @@ double stdev(std::vector<double> v) {
 
 double percentile(std::vector<double> v, double p) {
     sort(v);
-    double index = (v.size() - 1) * p;
-    int lower = static_cast<int>(floor(index));
-    int upper = static_cast<int>(ceil(index));
-    double lowerValue = v[lower];
-    double upperValue = v[upper];
-    return lowerValue + (upperValue - lowerValue) * (index - lower);
+    double rank = p * static_cast<double>(count(v) - 1) + 1;
+    double floor = static_cast<int>(rank);
+    double ceil = rank - floor;
+    if (ceil == 0.0) {
+        return v.at(floor - 1);
+    } else { 
+        double percentile = v.at(floor - 1) + ceil * (v.at(floor) - v.at(floor - 1));
+        return percentile;
+    }
 }

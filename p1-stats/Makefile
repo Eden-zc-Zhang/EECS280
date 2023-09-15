@@ -1,5 +1,5 @@
 CXX ?= g++
-CXXFLAGS ?= -Wall -Werror -pedantic -g --std=c++17 -Wno-sign-compare -Wno-comment
+CXXFLAGS = --std=c++17 -Wall -Werror -pedantic -g -fsanitize=address -fsanitize=undefined -D_GLIBCXX_DEBUG
 
 # Run a regression test
 test: main.exe stats_tests.exe stats_public_test.exe
